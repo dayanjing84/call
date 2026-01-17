@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试页面</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 50px;
+      background: #f0f0f0;
+    }
+    .box {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 { color: #409eff; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>✅ Vite服务正常运行</h1>
+    <p>如果您能看到这个页面，说明Vite开发服务器工作正常。</p>
+    <p>时间: <span id="time"></span></p>
+    <hr>
+    <h2>接下来请检查：</h2>
+    <ol>
+      <li>浏览器控制台是否有JavaScript错误（F12打开）</li>
+      <li>访问主页: <a href="/">http://127.0.0.1:5173/</a></li>
+    </ol>
+  </div>
+  
+  <script>
+    document.getElementById('time').textContent = new Date().toLocaleString();
+  </script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统诊断</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #409eff;
+        }
+
+        .test-item {
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .success {
+            background: #f0f9ff;
+            border-color: #409eff;
+        }
+
+        .error {
+            background: #fff0f0;
+            border-color: #f56c6c;
+        }
+
+        .pending {
+            background: #fffbf0;
+            border-color: #e6a23c;
+        }
+
+        button {
+            background: #409eff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #66b1ff;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔍 企业考勤系统 - 诊断工具</h1>
+
+        <div class="test-item success">
+            <h3>✅ Vite服务器</h3>
+            <p>状态：正常运行</p>
+            <p>地址：http://127.0.0.1:5173</p>
+        </div>
+
+        <div class="test-item pending" id="api-test">
+            <h3>⏳ 后端API测试</h3>
+            <p id="api-status">等待测试...</p>
+            <button onclick="testAPI()">测试API连接</button>
+            <pre id="api-result"></pre>
+        </div>
+
+        <div class="test-item pending" id="main-app">
+            <h3>⏳ 主应用测试</h3>
+            <p>访问主页查看Vue应用是否加载</p>
+            <button onclick="window.location.href='/'">访问主页</button>
+            <button onclick="clearCache()">清除缓存并访问</button>
+        </div>
+
+        <div class="test-item">
+            <h3>📋 常见问题排查</h3>
+            <ol>
+                <li><strong>页面空白</strong> - 打开浏览器控制台(F12)查看Console错误</li>
+                <li><strong>API错误</strong> - 检查后端服务是否运行在3000端口</li>
+                <li><strong>代理问题</strong> - 确保代理不拦截localhost</li>
+                <li><strong>缓存问题</strong> - 尝试Ctrl+Shift+R强制刷新</li>
+            </ol>
+        </div>
+
+        <div class="test-item">
+            <h3>🔗 快捷链接</h3>
+            <a href="/" target="_blank">主页</a> |
+            <a href="http://127.0.0.1:3000/api/health" target="_blank">API健康检查</a> |
+            <a href="/test.html">测试页面</a>
+        </div>
+    </div>
+
+    <script>
+        async function testAPI() {
+            const apiTest = document.getElementById('api-test');
+            const apiStatus = document.getElementById('api-status');
+            const apiResult = document.getElementById('api-result');
+
+            apiStatus.textContent = '正在测试...';
+            apiTest.className = 'test-item pending';
+
+            try {
+                const response = await fetch('http://127.0.0.1:3000/api/health');
+                const data = await response.json();
+
+                if (data.status === 'ok') {
+                    apiTest.className = 'test-item success';
+                    apiStatus.textContent = '✅ API连接成功';
+                    apiResult.textContent = JSON.stringify(data, null, 2);
+                } else {
+                    throw new Error('API返回状态异常');
+                }
+            } catch (error) {
+                apiTest.className = 'test-item error';
+                apiStatus.textContent = '❌ API连接失败';
+                apiResult.textContent = '错误: ' + error.message + '\n\n请检查：\n1. 后端是否运行在3000端口\n2. 代理是否阻止localhost访问';
+            }
+        }
+
+        function clearCache() {
+            if (confirm('即将清除缓存并刷新页面')) {
+                location.href = '/?t=' + Date.now();
+            }
+        }
+
+        // 页面加载时自动测试API
+        window.onload = function () {
+            setTimeout(testAPI, 500);
+        };
+    </script>
+</body>
+
+</html>
